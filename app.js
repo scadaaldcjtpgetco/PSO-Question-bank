@@ -12,6 +12,11 @@
   "use strict";
 
   const DAYS = [1, 2, 3, 4, 5, 6];
+  const THEME_STORAGE_KEY = "qb-theme";
+
+  // Apply theme as early as possible to reduce flash between light/dark.
+  const initialTheme = getInitialTheme();
+  if (initialTheme) document.documentElement.dataset.theme = initialTheme;
 
   const state = {
     selectedDay: null,
@@ -33,6 +38,8 @@
     els.questionCount = document.getElementById("questionCount");
     els.timerText = document.getElementById("timerText");
     els.backToTop = document.getElementById("backToTop");
+    els.themeToggle = document.getElementById("themeToggle");
+    els.themeLabel = document.getElementById("themeLabel");
 
     els.daySelect = document.getElementById("daySelect");
     els.searchInput = document.getElementById("searchInput");
@@ -54,6 +61,7 @@
     wireUi();
     setCounts();
     initBackToTop();
+    initTheme();
 
     const embedded = window.questionData;
     if (!embedded || typeof embedded !== "object") {
@@ -164,6 +172,46 @@
         window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches ?? false;
       window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
     });
+  }
+
+  function initTheme() {
+    const btn = els.themeToggle;
+    const label = els.themeLabel;
+    if (!btn || !label) return;
+
+    const current =
+      document.documentElement.dataset.theme === "light" ? "light" : "dark";
+    label.textContent = current === "light" ? "Light" : "Dark";
+
+    btn.addEventListener("click", () => {
+      const next =
+        document.documentElement.dataset.theme === "light" ? "dark" : "light";
+      document.documentElement.dataset.theme = next;
+      label.textContent = next === "light" ? "Light" : "Dark";
+      safeLocalStorageSet(THEME_STORAGE_KEY, next);
+    });
+  }
+
+  function getInitialTheme() {
+    const stored = safeLocalStorageGet(THEME_STORAGE_KEY);
+    if (stored === "light" || stored === "dark") return stored;
+    return "dark";
+  }
+
+  function safeLocalStorageGet(key) {
+    try {
+      return window.localStorage.getItem(key);
+    } catch {
+      return null;
+    }
+  }
+
+  function safeLocalStorageSet(key, value) {
+    try {
+      window.localStorage.setItem(key, value);
+    } catch {
+      // ignore
+    }
   }
 
   function setControlsEnabled(enabled) {
