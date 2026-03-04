@@ -32,6 +32,7 @@
     els.loadStatus = document.getElementById("loadStatus");
     els.questionCount = document.getElementById("questionCount");
     els.timerText = document.getElementById("timerText");
+    els.backToTop = document.getElementById("backToTop");
 
     els.daySelect = document.getElementById("daySelect");
     els.searchInput = document.getElementById("searchInput");
@@ -52,6 +53,7 @@
 
     wireUi();
     setCounts();
+    initBackToTop();
 
     const embedded = window.questionData;
     if (!embedded || typeof embedded !== "object") {
@@ -133,6 +135,35 @@
 
   function setStatus(text) {
     if (els.loadStatus) els.loadStatus.textContent = text;
+  }
+
+  function initBackToTop() {
+    const btn = els.backToTop;
+    if (!btn) return;
+
+    const thresholdPx = 260;
+    let ticking = false;
+
+    const update = () => {
+      ticking = false;
+      const y = window.scrollY || document.documentElement.scrollTop || 0;
+      btn.classList.toggle("is-visible", y > thresholdPx);
+    };
+
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(update);
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    update();
+
+    btn.addEventListener("click", () => {
+      const reduce =
+        window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches ?? false;
+      window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
+    });
   }
 
   function setControlsEnabled(enabled) {
