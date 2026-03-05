@@ -5,7 +5,11 @@
  *
  * Notes:
  * - This app does NOT parse Excel at runtime. It works offline.
- * - To regenerate data, run: python source/tools/generate_question_data.py --root source --out docs/data.js
+ * - To regenerate data, run:
+ *   - 2026: python source/tools/generate_question_data.py --root source/2026 --out docs/data.js --allow-missing
+ *   - 2025: python source/tools/generate_question_data.py --root source/2025 --out docs/data-2025.js --allow-missing
+ *   - 2024: python source/tools/generate_question_data.py --root source/2024 --out docs/data-2024.js --allow-missing
+ *   - 2021: python source/tools/generate_question_data.py --root source/2021 --out docs/data-2021.js --allow-missing
  */
 
 (() => {
@@ -73,6 +77,7 @@
     }
 
     hydrateFromEmbeddedData(embedded);
+    updateDaySelectAvailability();
     selectNoDay();
     setStatus("Ready");
   });
@@ -360,6 +365,21 @@
     }
   }
 
+  function updateDaySelectAvailability() {
+    const select = els.daySelect;
+    if (!select) return;
+
+    const options = select.querySelectorAll("option[value]");
+    for (const opt of options) {
+      const raw = opt.value;
+      if (!raw) continue;
+      const day = Number(raw);
+      if (!Number.isFinite(day)) continue;
+      const meta = state.dayData.get(day);
+      opt.disabled = !(meta && meta.loaded && meta.questions.length > 0);
+    }
+  }
+
   function normalizeEmbeddedQuestion(day, q, idx) {
     const number =
       (q && typeof q.number === "number" && Number.isFinite(q.number)
@@ -402,6 +422,15 @@
     if (!meta || !meta.loaded) return;
 
     els.emptyState.hidden = true;
+    if (meta.questions.length === 0) {
+      els.questions.replaceChildren();
+      const none = document.createElement("div");
+      none.className = "empty-state";
+      none.innerHTML = `<h2>No questions</h2><p>No questions are available for this selection.</p>`;
+      els.questions.appendChild(none);
+      setCounts(0);
+      return;
+    }
 
     const query = cleanText(els.searchInput.value).toLowerCase();
     const useShuffle = Boolean(els.shuffleToggle.checked);

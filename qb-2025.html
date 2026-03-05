@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Question Bank 2025</title>
+    <link rel="stylesheet" href="./styles.css" />
+    <script defer src="./data-2025.js"></script>
+    <script defer src="./app.js"></script>
+  </head>
+  <body>
+    <header class="app-header">
+      <div class="container header-inner">
+        <div class="brand">
+          <div class="brand-title">Question Bank 2025</div>
+          <div class="brand-subtitle" id="loadStatus" aria-live="polite">
+            Ready
+          </div>
+        </div>
+
+        <div class="header-pills" aria-label="Status">
+          <div class="pill" title="Loaded questions for selected day">
+            Questions:
+            <span class="pill-strong" id="questionCount">0</span>
+          </div>
+          <div class="pill" title="Timer">
+            Time:
+            <span class="pill-strong" id="timerText">—</span>
+          </div>
+          <a
+            class="pill pill-btn"
+            href="./index.html"
+            aria-label="Back to dashboard"
+            title="Dashboard"
+            >Dashboard</a
+          >
+          <button
+            id="themeToggle"
+            class="pill pill-btn"
+            type="button"
+            aria-label="Toggle light/dark mode"
+            title="Toggle theme"
+          >
+            Theme:
+            <span class="pill-strong" id="themeLabel">Dark</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="container">
+      <section class="controls" aria-label="Controls">
+        <div class="control">
+          <label for="daySelect">Select Day</label>
+          <select id="daySelect">
+            <option value="" selected>Select…</option>
+            <option value="1">Day 1</option>
+            <option value="2">Day 2</option>
+            <option value="3">Day 3</option>
+            <option value="4">Day 4</option>
+            <option value="5">Day 5</option>
+            <option value="6">Reliability</option>
+          </select>
+        </div>
+
+        <div class="control grow">
+          <label for="searchInput">Search</label>
+          <input
+            id="searchInput"
+            type="search"
+            placeholder="Search by question / option…"
+            disabled
+          />
+        </div>
+
+        <div class="control inline">
+          <label class="checkbox">
+            <input id="shuffleToggle" type="checkbox" disabled />
+            <span>Shuffle</span>
+          </label>
+        </div>
+
+        <div class="control inline">
+          <label for="timerMinutes">Timer (min)</label>
+          <input
+            id="timerMinutes"
+            type="number"
+            min="1"
+            max="240"
+            value="30"
+            disabled
+          />
+        </div>
+
+        <div class="actions">
+          <button id="resetBtn" class="btn ghost" disabled>Reset</button>
+          <button id="showAnswersBtn" class="btn secondary" disabled>
+            Show All Answers
+          </button>
+          <button id="submitBtn" class="btn primary" disabled>Submit</button>
+        </div>
+      </section>
+
+      <section id="summary" class="summary" hidden aria-live="polite"></section>
+
+      <section id="questions" class="questions" aria-label="Questions">
+        <div class="empty-state" id="emptyState">
+          <h2>Welcome PSO-Examination-2025</h2>
+          <p>Select Day for Quick load the Question bank</p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="container footer">
+      <span>Sub-SLDC, Jetpur (Gujarat)</span>
+    </footer>
+
+    <button
+      id="backToTop"
+      class="back-to-top"
+      type="button"
+      aria-label="Back to top"
+      title="Back to top"
+    >
+      TOP
+    </button>
+  </body>
+</html>

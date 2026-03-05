@@ -183,6 +183,7 @@ code {
   line-height: inherit;
   cursor: pointer;
   user-select: none;
+  text-decoration: none;
   transition: transform 120ms ease, box-shadow 160ms ease,
     border-color 160ms ease, background 160ms ease;
 }
@@ -291,6 +292,28 @@ select:disabled {
   gap: 10px;
   flex-wrap: wrap;
   align-items: center;
+}
+
+.dashboard-main {
+  padding: 22px 0 40px;
+}
+
+.dashboard-card {
+  margin-top: 22px;
+}
+
+.dashboard-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 14px;
+}
+
+.dashboard-actions .btn {
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .btn {
