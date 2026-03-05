@@ -234,6 +234,8 @@
     state.submission = null;
     stopTimer();
     els.timerText.textContent = "—";
+    els.timerMinutes.max = "240";
+    els.timerMinutes.value = "30";
     els.searchInput.value = "";
     setControlsEnabled(false);
 
@@ -271,13 +273,35 @@
       return;
     }
 
+    setDefaultTimerMinutesForDay(day);
     computeShuffleForDay(day);
     startTimerFromUi();
     render();
   }
 
+  function getTimerMaxMinutes() {
+    const max = Number(els.timerMinutes?.max);
+    return Number.isFinite(max) && max >= 1 ? max : 240;
+  }
+
+  function setDefaultTimerMinutesForDay(day) {
+    const meta = state.dayData.get(day);
+    const totalQuestions =
+      meta && Array.isArray(meta.questions) ? meta.questions.length : 0;
+
+    const maxMinutes = Math.max(240, totalQuestions || 1);
+    els.timerMinutes.max = String(maxMinutes);
+    els.timerMinutes.value = String(
+      clampInt(totalQuestions || 1, 1, maxMinutes) ?? 1,
+    );
+  }
+
   function startTimerFromUi() {
-    const minutes = clampInt(Number(els.timerMinutes.value), 1, 240);
+    const minutes = clampInt(
+      Number(els.timerMinutes.value),
+      1,
+      getTimerMaxMinutes(),
+    );
     if (!minutes) {
       stopTimer();
       els.timerText.textContent = "—";
