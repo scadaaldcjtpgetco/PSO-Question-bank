@@ -453,7 +453,10 @@
 
     const frag = document.createDocumentFragment();
     for (let i = 0; i < visibleQuestions.length; i += 1) {
-      frag.appendChild(renderQuestionCard(visibleQuestions[i], i + 1));
+      const q = visibleQuestions[i];
+      // When searching, show the original question number. Otherwise show sequence number 1..N
+      const displayNum = query.length > 0 ? q.number : i + 1;
+      frag.appendChild(renderQuestionCard(q, displayNum));
     }
     els.questions.appendChild(frag);
     setCounts(visibleQuestions.length);
