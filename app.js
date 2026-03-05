@@ -454,8 +454,8 @@
     const frag = document.createDocumentFragment();
     for (let i = 0; i < visibleQuestions.length; i += 1) {
       const q = visibleQuestions[i];
-      // When searching, show the original question number. Otherwise show sequence number 1..N
-      const displayNum = query.length > 0 ? q.number : i + 1;
+      // When searching, show its original positional number from the full list.
+      const displayNum = query.length > 0 ? orderedQuestions.indexOf(q) + 1 : i + 1;
       frag.appendChild(renderQuestionCard(q, displayNum));
     }
     els.questions.appendChild(frag);
